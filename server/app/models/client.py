@@ -15,3 +15,16 @@ class Client(db.Model):#asi se hereda
     #El backref es para poner a donde hace referencia (para atras)
     #El lazy hace que cuando pedimpos las prdenes del clientes, va yu busca las correctas. Hasta que no lo invoca, no existe esa madre. Por lo que carga hasta que lo pide
 
+    def to_dict(self, orders:bool=False):#ponemos que ea opcional el order
+        client={
+            'id':self.id,
+            'name':self.name,
+            'phone_number':self.phone_number,
+            'address':self.address,
+            'created_at':self.created_at,
+        }
+
+        if orders:
+            client["orders"]=self.orders
+        return client
+

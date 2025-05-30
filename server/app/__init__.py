@@ -23,7 +23,9 @@ def create_app():
 
     #RUTAS
     from.routes.user_route import user_bp
+    from .routes.client_route import client_bp
     app.register_blueprint(user_bp)
+    app.register_blueprint(client_bp)
 
     CORS(app)
     return app
