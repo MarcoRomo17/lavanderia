@@ -1,57 +1,51 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React from "react";
 import { StatusBar } from 'expo-status-bar';
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
-import lavadora from "./IMG/lav.png"
+import agregarIMG from "./IMG/Agregar.png"
 
 
+export const CreateClient =()=>{ 
 
-export const Login =()=>{ 
-
-  const [DatosIngresados, setDatosIngresados] = useState({});
-
-
-  const onChange=(target, value)=>{
-
-    const newData= DatosIngresados
-    console.log(target, value)
-    newData[target]= value;
-
-    setDatosIngresados(newData)
-  }
-   const navigation = useNavigation();
-  return (
+    const {navigate}= useNavigation()
+    return (
         <>
             <View style={styles.container}>
             <View style={styles.nav}>
-              <Text style={styles.title} >Lavanderias</Text>
+              <Text style={styles.title} >¡Regístra un cliente!</Text>
 
             </View>
-              <Text style={styles.subTitle} >Inicia sesión</Text>
-                
+
             <View style={styles.imgContainer}>{/* img-container */}
 
-              <Image style={styles.imgContainer.img} source={lavadora}></Image>
+              <Image style={styles.imgContainer.img} source={agregarIMG}></Image>
             </View>
+
+              <Text style={styles.subTitle} >Rellena los siguientes campos por favor</Text>
+
             
             <View style={styles.mainContent}>
 
-              <Text style={styles.label}>Ingresa tu correo:</Text>
-              <TextInput style={styles.input}
-              onChangeText={(text)=>{onChange("email", text)}}
-              ></TextInput>
 
-              <Text style={styles.label}>Ingresa tu contraseña:</Text>
+              <Text style={styles.label}>Nombre completo:</Text>
+              <TextInput style={styles.input}></TextInput>
+
+              <Text style={styles.label}>Número telefónico:</Text>
+              <TextInput style={styles.input}></TextInput>
+            
+              <Text style={styles.label}>Domicilio completo:</Text>
               <TextInput style={styles.input}
-              onChangeText={(text)=>{onChange("password", text)}}
-              ></TextInput>
+              multiline={true}
+              numberOfLines={4}></TextInput>
+
+
 
               <Pressable style={styles.boton}>
-                <Text style={styles.boton.label}>Iniciar sesión</Text>
+                <Text style={styles.boton.label}>Registrarse</Text>
               </Pressable>
 
-              <Pressable onPress={()=>navigation.navigate("CreateUser")}>
-                <Text style={styles.label} >¿No tienes cuenta?</Text>
+              <Pressable>
+                <Text style={styles.label}>¡Ya tengo cuenta!</Text>
               </Pressable>
             </View>
               
@@ -82,8 +76,9 @@ const styles = StyleSheet.create({
   subTitle:{
     fontSize:20,
     fontWeight:"bold",
-    margin:10,
-    marginHorizontal:"auto"
+    marginHorizontal:15,
+
+    marginVertical:10,
   },
   nav:{
     flexDirection: 'row',
