@@ -1,52 +1,65 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useState } from "react";
 import { StatusBar } from 'expo-status-bar';
-import { Button, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
-import agregarIMG from "./IMG/Agregar.png"
+import { Alert, Button, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import axios from "axios";
+
 
 
 export const CreateClient =()=>{ 
+  const [DATA, setDATA] = useState({});
 
+  const onChange=(target, value)=>{
+    const newData=DATA;//objeto en el que guardamos la info que ya tenemos
+    console.log(target, value)
+    newData[target]= value;//agregamos al objeto una propiedas y un valor
+    setDATA(newData)
+  }
+
+  const registerClient= async()=>{
+    try {
+      console.log("Mandare", DATA)
+      const registered= await axios.post("https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/create", DATA)
+      Alert.alert("Registrado", `El usuario ${DATA.name} se ha registrado correctamente`)
+    } catch (error) {
+      Alert.alert("No se registró", error)
+    }
+  }
     const {navigate}= useNavigation()
     return (
         <>
             <View style={styles.container}>
             <View style={styles.nav}>
-              <Text style={styles.title} >¡Regístra un cliente!</Text>
+              <Text style={styles.title} >¡Regístrate!</Text>
 
             </View>
-
-            <View style={styles.imgContainer}>{/* img-container */}
-
-              <Image style={styles.imgContainer.img} source={agregarIMG}></Image>
-            </View>
-
               <Text style={styles.subTitle} >Rellena los siguientes campos por favor</Text>
 
             
             <View style={styles.mainContent}>
 
 
-              <Text style={styles.label}>Nombre completo:</Text>
-              <TextInput style={styles.input}></TextInput>
+              <Text style={styles.label}>Ingresa tu nombre completo:</Text>
+              <TextInput style={styles.input}
+              onChangeText={(text)=>onChange("name",text)}
+              ></TextInput>
 
               <Text style={styles.label}>Número telefónico:</Text>
-              <TextInput style={styles.input}></TextInput>
-            
+              <TextInput style={styles.input}
+              onChangeText={(text)=>onChange("phone_number",text)}
+              ></TextInput>
+
               <Text style={styles.label}>Domicilio completo:</Text>
               <TextInput style={styles.input}
               multiline={true}
-              numberOfLines={4}></TextInput>
+              numberOfLines={4}
+              onChangeText={(text)=>onChange("address",text)}></TextInput>
 
-
-
-              <Pressable style={styles.boton}>
+              <Pressable style={styles.boton} onPress={()=>registerClient()}>
                 <Text style={styles.boton.label}>Registrarse</Text>
               </Pressable>
 
-              <Pressable>
-                <Text style={styles.label}>¡Ya tengo cuenta!</Text>
-              </Pressable>
+     
             </View>
               
 

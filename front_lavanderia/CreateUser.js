@@ -1,8 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StatusBar } from 'expo-status-bar';
-import { Button, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-
+import { Button, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
+import agregarIMG from "./IMG/Agregar.png"
 
 
 export const CreateUser =()=>{ 
@@ -12,29 +12,35 @@ export const CreateUser =()=>{
         <>
             <View style={styles.container}>
             <View style={styles.nav}>
-              <Text style={styles.title} >¡Regístrate!</Text>
+              <Text style={styles.title} >¡Regístrate EN PROCESO !!ahora!</Text>
 
             </View>
+
+            <View style={styles.imgContainer}>{/* img-container */}
+
+              <Image style={styles.imgContainer.img} source={agregarIMG}></Image>
+            </View>
+
               <Text style={styles.subTitle} >Rellena los siguientes campos por favor</Text>
 
             
             <View style={styles.mainContent}>
 
 
-              <Text style={styles.label}>Ingresa tu nombre completo:</Text>
+              <Text style={styles.label}>Nombre completo:</Text>
               <TextInput style={styles.input}></TextInput>
 
-              <Text style={styles.label}>Número telefónico:</Text>
+              <Text style={styles.label}>Correo electrónico:</Text>
+              <TextInput style={styles.input}></TextInput>
+
+              <Text style={styles.label}>Ingresa una contraseña:</Text>
+              <TextInput style={styles.input}></TextInput>
+
+              <Text style={styles.label}>Confirma tu contraseña:</Text>
               <TextInput style={styles.input}></TextInput>
             
-              <Text style={styles.label}>Ingresa tu correo:</Text>
-              <TextInput style={styles.input}></TextInput>
 
-              <Text style={styles.label}>Ingresa tu contraseña:</Text>
-              <TextInput style={styles.input}></TextInput>
 
-               <Text style={styles.label}>Confirma tu contraseña:</Text>
-              <TextInput style={styles.input}></TextInput>
 
 
               <Pressable style={styles.boton}>
