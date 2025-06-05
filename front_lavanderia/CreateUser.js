@@ -1,23 +1,48 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useState } from "react";
 import { StatusBar } from 'expo-status-bar';
-import { Button, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
+import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, Alert } from 'react-native';
 import agregarIMG from "./IMG/Agregar.png"
+import axios from "axios";
 
 
 export const CreateUser =()=>{ 
+    const [DATA, setDATA] = useState({
+      rol:"cliente"
+    });
+  
+    const onChange=(target, value)=>{
+      const newData=DATA;//objeto en el que guardamos la info que ya tenemos
+      console.log(target, value)
+      newData[target]= value;//agregamos al objeto una propiedas y un valor
+      setDATA(newData)
+    }
 
+      const registerUser= async()=>{
+    try {
+      
+      console.log("Mandare", DATA)
+      const registered= await axios.post("https://4f9dxrb9-5000.usw3.devtunnels.ms/users/register", DATA)
+      console.log("Ya se hizo la peticion")
+      Alert.alert("Registrado", `El usuario ${DATA.name} se ha registrado correctamente`)
+      
+
+    } catch (error) {
+      Alert.alert("No se registró", error)
+    }
+  }
+
+  
     const {navigate}= useNavigation()
     return (
         <>
             <View style={styles.container}>
             <View style={styles.nav}>
-              <Text style={styles.title} >¡Regístrate EN PROCESO !!ahora!</Text>
+              <Text style={styles.title} >¡Regístrate ahora!</Text>
 
             </View>
 
             <View style={styles.imgContainer}>{/* img-container */}
-
               <Image style={styles.imgContainer.img} source={agregarIMG}></Image>
             </View>
 
@@ -26,24 +51,28 @@ export const CreateUser =()=>{
             
             <View style={styles.mainContent}>
 
-
               <Text style={styles.label}>Nombre completo:</Text>
-              <TextInput style={styles.input}></TextInput>
+              <TextInput style={styles.input}
+              onChangeText={(text)=>onChange("name",text)}
+              ></TextInput>
 
               <Text style={styles.label}>Correo electrónico:</Text>
-              <TextInput style={styles.input}></TextInput>
+              <TextInput style={styles.input}
+              onChangeText={(text)=>onChange("email",text)}
+              ></TextInput>
 
               <Text style={styles.label}>Ingresa una contraseña:</Text>
-              <TextInput style={styles.input}></TextInput>
+              <TextInput style={styles.input}
+              onChangeText={(text)=>onChange("password",text)}
+              ></TextInput>
 
-              <Text style={styles.label}>Confirma tu contraseña:</Text>
-              <TextInput style={styles.input}></TextInput>
+
             
 
 
 
 
-              <Pressable style={styles.boton}>
+              <Pressable style={styles.boton} onPress={()=>registerUser()}>
                 <Text style={styles.boton.label}>Registrarse</Text>
               </Pressable>
 

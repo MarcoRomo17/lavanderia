@@ -7,7 +7,9 @@ import axios from "axios";
 
 
 export const CreateClient =()=>{ 
-  const [DATA, setDATA] = useState({});
+  const [DATA, setDATA] = useState({
+    rol:"cliente"
+  });
 
   const onChange=(target, value)=>{
     const newData=DATA;//objeto en el que guardamos la info que ya tenemos
@@ -18,6 +20,7 @@ export const CreateClient =()=>{
 
   const registerClient= async()=>{
     try {
+    
       console.log("Mandare", DATA)
       const registered= await axios.post("https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/create", DATA)
       Alert.alert("Registrado", `El usuario ${DATA.name} se ha registrado correctamente`)

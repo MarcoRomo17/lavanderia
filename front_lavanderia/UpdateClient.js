@@ -1,7 +1,32 @@
-import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, registerCallableModule, ScrollView } from 'react-native';
+import axios from 'axios';
+import { useState } from 'react';
+import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, registerCallableModule, ScrollView, Alert } from 'react-native';
 
 export const UpdateClient=({route})=>{
   const { datosUsuario } = route.params;
+
+    const [DATA, setDATA] = useState({
+      rol:"cliente"
+    });
+  
+    const onChange=(target, value)=>{
+      const newData=DATA;//objeto en el que guardamos la info que ya tenemos
+      console.log(target, value)
+      newData[target]= value;//agregamos al objeto una propiedas y un valor
+      setDATA(newData)
+    }
+
+      const updateClient= async()=>{
+    try {
+    
+      console.log("Mandare", DATA)
+      const updated= await axios.put(`https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/update/${datosUsuario.id}`, DATA)
+      console.log("Se supone ya hice la peticion")
+      Alert.alert("Actualizado", `El usuario ${DATA.name} se ha actualizado correctamente`)
+    } catch (error) {
+      Alert.alert("No se registró", error)
+    }
+  }
 
     return(
         <>
@@ -13,17 +38,23 @@ export const UpdateClient=({route})=>{
             <View style={styles.mainContent}>
 
             <Text style={styles.label}>Nombre completo:</Text>
-            <TextInput style={styles.input} placeholder={datosUsuario.name}></TextInput>
+            <TextInput style={styles.input} 
+            onChangeText={(text)=>onChange("name",text)}
+            placeholder={datosUsuario.name}></TextInput>
 
             <Text style={styles.label}>Número telefónico:</Text>
-            <TextInput style={styles.input} placeholder={datosUsuario.phone_number}></TextInput>
+            <TextInput style={styles.input} 
+            onChangeText={(text)=>onChange("phone_number",text)}
+            placeholder={datosUsuario.phone_number}></TextInput>
         
             <Text style={styles.label}>Domicilio completo:</Text>
-            <TextInput style={styles.input} placeholder='Benito Camelo'
+            <TextInput style={styles.input} 
+            onChangeText={(text)=>onChange("address",text)}
+            placeholder={datosUsuario.address}
             multiline={true}
             numberOfLines={4}></TextInput>
 
-            <Pressable style={styles.boton}>
+            <Pressable style={styles.boton} onPress={()=>updateClient()}>
             <Text style={styles.boton.label}>Actualizar datos</Text>
             </Pressable>
             
