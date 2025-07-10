@@ -1,8 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { StatusBar } from 'expo-status-bar';
-import { Button, Pressable, StyleSheet, Text, TextInput, View, Image } from 'react-native';
+import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, Alert } from 'react-native';
 import lavadora from "./IMG/lav.png"
+import axios from "axios";
 
 
 
@@ -10,7 +11,7 @@ export const Login =()=>{
 
   const [DatosIngresados, setDatosIngresados] = useState({});
 
-
+  const {navigate}=useNavigation()
   const onChange=(target, value)=>{
 
     const newData= DatosIngresados
@@ -18,6 +19,17 @@ export const Login =()=>{
     newData[target]= value;
 
     setDatosIngresados(newData)
+  }
+
+  const logearse= async()=>{
+    try {
+      console.log("Mandare: ", DatosIngresados)
+      const usuarioLogeado= await axios.post("https://4f9dxrb9-5000.usw3.devtunnels.ms/users/login", DatosIngresados)
+      
+      navigate("AuxView")
+    } catch (error) {
+      Alert.alert("Algo salió mal", error)
+    }
   }
    const navigation = useNavigation();
   return (
@@ -46,11 +58,11 @@ export const Login =()=>{
               onChangeText={(text)=>{onChange("password", text)}}
               ></TextInput>
 
-              <Pressable style={styles.boton}>
+              <Pressable style={styles.boton} onPress={()=>logearse()}>
                 <Text style={styles.boton.label}>Iniciar sesión</Text>
               </Pressable>
 
-              <Pressable onPress={()=>navigation.navigate("CreateUser")}>
+              <Pressable onPress={()=>navigate("CreateUser")}>
                 <Text style={styles.label} >¿No tienes cuenta?</Text>
               </Pressable>
             </View>

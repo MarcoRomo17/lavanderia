@@ -1,7 +1,7 @@
 from flask import jsonify, request, Blueprint
 from app.controllers.client_controller import create_client, search_client_by_name, search_client_by_phone, update_client, delete_client
 
-client_bp= Blueprint= Blueprint("client_bp", __name__, url_prefix="/clientes")
+client_bp= Blueprint("client_bp", __name__, url_prefix="/clientes")
 
 @client_bp.route("/create", methods=['POST'])
 def create():

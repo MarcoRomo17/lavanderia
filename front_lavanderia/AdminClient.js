@@ -1,17 +1,15 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { StatusBar } from 'expo-status-bar';
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image,  ScrollView, Alert } from 'react-native';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
-import SelectDropdown from 'react-native-select-dropdown';
 import axios from "axios";
 
 
 
 export const AdminClient =({navigation})=>{ 
-      const [phoneOrName, setphoneOrName] = useState({txt:"...",medio:" "});//Cacha si se busca por telefono o por telefono, en objeto
+      const [phoneOrName, setphoneOrName] = useState({txt:"...",medio:" "});//Cacha si se busca por telefono o por telefono, en objeto. Yo esto lo tengo por default como objeto para poder cambiar el texto del placeholder del buscador
       const [dataABuscar, setdataABuscar] = useState(); //Cacha los datos que buscara en toda la bola de usuarios
-      const [datosTabla, setdatosTabla] = useState([]);//Aqui se iran cambiando los datos de la tabla
+      const [datosTabla, setdatosTabla] = useState([]);//Aqui se iran cambiando los datos de la tabla. Es en donde se guarda lo que nos devuelve la BD
 
       const onChange=(value)=>{//cacha y setea lo de la busqueda de usuario
         setdataABuscar(value)
@@ -20,36 +18,37 @@ export const AdminClient =({navigation})=>{
 
       const buscarEnLaBD=async()=>{
         try {
-          console.log("El medio es: ", phoneOrName.medio, " y lo que buscare es: ", dataABuscar)
-              var usuariosdeRespuesta=[]
+          console.log("El medio es: ", phoneOrName.medio, " y lo que buscare es: ", dataABuscar)//Pongo este console.log para saber que info tengo antes de mandarla 
+              var usuariosdeRespuesta=[] // esta es una variable provisional, en la cual se guardara lo que traiga la bd. Es provisional por que solo se puede utilizar en esta funcion
           //para buscar por telefono
-          if(phoneOrName.medio=="phone"){
+          if(phoneOrName.medio=="phone"){//si el medio que escoogio es telefono, se ejecuta este endpoint:
               usuariosdeRespuesta= await axios.get(`https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/search/phone?phone=${dataABuscar}`)
-
+              const vAux=[usuariosdeRespuesta.data]
+              setdatosTabla(vAux)
           }
           
           //para buscar por nombre
-          if(phoneOrName.medio=="name"){
+          if(phoneOrName.medio=="name"){//si el medio que escoogio es nombre, se ejecuta este endpoint:
              usuariosdeRespuesta= await axios.get(`https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/search/name?name=${dataABuscar}`)
+             console.log("la peticion ya se hizo")
+             console.log("me traje: ", usuariosdeRespuesta.data)
+             setdatosTabla(usuariosdeRespuesta.data) //ahora si, cambiamos el valor del useState que habiamos dicho a lo que nos trajo la BD
           }
 
-          console.log("la peticion ya se hizo")
-          console.log("me traje: ", usuariosdeRespuesta.data)
-          setdatosTabla(usuariosdeRespuesta.data)
           
-        } catch (error) {
+        } catch (error) {// por si pasa un error
           Alert.alert("Error al buscar", `Lo que pasa es que: ${error}`)
         }
 
       }
 
-      const eliminarCliente= async(ID)=>{
-          console.log("Hola, eliminare el id ", ID)
-          try {
-           await axios.delete(`https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/delete/${ID}`)
+      const eliminarCliente= async(ID)=>{// Esta es la funcion para eliminar. Recibe de parametro el id del cliente que vamos a eliminar. Es llamada desde los botones de la tabla
+          console.log("Hola, eliminare el id ", ID)//Para saber que me trae
+          try {//el trycatch
+           await axios.delete(`https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/delete/${ID}`)//como puedes ver, por la naturaleza del endpoint de como mandarle el id, el texto de la URL debe ser dinamico
             console.log("Ya hice la peticion")
             Alert.alert("Usuario elimiando con exito")
-          } catch (error) {
+          } catch (error) {//el error
            Alert.alert("Error al buscar", `Lo que pasa es que: ${error}`)
 
           }
@@ -57,16 +56,20 @@ export const AdminClient =({navigation})=>{
 
 
 
-    const {navigate}= useNavigation()
+    const {navigate}= useNavigation()// esta madrecita es la que nos permitira navegar entre paginas
 
     //Hacemos un mapeo de lo que trae la BD, agregando los botones para eliminar y para editar
-    const mapiado= datosTabla.map((Registro)=>(
+    const mapiado= datosTabla.map((Registro)=>( //en la variable "mapiado" es donde vamos a guardar el arreglo modificado por .map() de lo que nos trajo la BD. Aqui se usa ese useState que dije
+      //A continacion, le decimos que por cada elemento del arreglo original (recuerda que cada elemento es un objeto) haga un arreglo dividiendolo en partes
+      //Por lo que ese arreglo tendra el nombre, el telefono, el domicilio, y luego los botones (que si, se ven bieeen raros. De hecho le atine a que asi fuera laforma de poner botones XD)
     [Registro.name,Registro.phone_number,Registro.address,
       (<>
-      <Pressable onPress={()=>eliminarCliente(Registro.id)}>
+      <Pressable onPress={()=>eliminarCliente(Registro.id)/* este es el boton de borrar, que como puedes ver, manda a llamar a la funcion eliminar, y le pasa el id del que se va a eliminar */}>
         <Text>Borrar</Text>
       </Pressable>
-      <Pressable onPress={() => navigation.navigate('UpdateClient', { datosUsuario: Registro })}>
+      <Pressable onPress={() => navigation.navigate('UpdateClient', { datosUsuario: Registro })/* Aqui esta el de actualizar. Este te redirecciona a tu pantalla de update, y te manda la info se paso con el  { datosUsuario: Registro }
+      IMPORTANTEISMO !!! ATENCION!!! cambia el nombre de UpdateClient a como tu lo tengas nombrado porf
+      */}>
         <Text>Update</Text>
       </Pressable>
       </>)]
@@ -84,14 +87,14 @@ export const AdminClient =({navigation})=>{
 
             <View style={styles.buscador}>
               <TextInput
-              placeholder={`Buscar por ${phoneOrName.txt}`}
+              placeholder={`Buscar por ${phoneOrName.txt}`/* Por medio de tecxto dinamico y un useState cambio el placeholder */}
               style={styles.buscador.input}
               onChangeText={(text)=>onChange(text)}></TextInput>
 
-              <Pressable style={styles.buscador.boton} onPress={()=>buscarEnLaBD()}><Text>buscar</Text></Pressable>
-              <Pressable style={styles.buscador.boton} onPress={()=>setphoneOrName({txt:"telefono",medio:"phone"})}><Text>T</Text></Pressable>
-              <Pressable style={styles.buscador.boton} onPress={()=>setphoneOrName({txt:"nombre",medio:"name"})}><Text>N</Text></Pressable>
-
+              <Pressable style={styles.buscador.boton} onPress={()=>buscarEnLaBD()/* Buscamos en la bd al presionar este boton */}><Text>B</Text></Pressable>
+              <Pressable style={styles.buscador.boton} onPress={()=>setphoneOrName({txt:"telefono",medio:"phone"})/* Cambiamos el useState respectivo a telefono */}><Text>T</Text></Pressable>
+              <Pressable style={styles.buscador.boton} onPress={()=>setphoneOrName({txt:"nombre",medio:"name"})/* Cambiamos el useState respectivo a telefono  */}><Text>N</Text></Pressable>
+              {/* OJO a la hira de calarlo. Debes de seleccionar si buscar por telefono o por nombre antes de buscar, si no te saldra error */}
             </View>
 
               <Text style={styles.subTitle} >Rellena los siguientes campos por favor</Text>
@@ -110,7 +113,7 @@ export const AdminClient =({navigation})=>{
     )
 }
 
-
+//mis estilos feos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -180,9 +183,8 @@ const styles = StyleSheet.create({
   buscador:{
     height:50,
     flexDirection:"row",// hace que el boton y el input esten en el mismo rengolon
-    backgroundColor:"green",
+    marginVertical:"auto",
     
-    margin:0,
     padding:0,
      boton:{
     backgroundColor:"#70f788",

@@ -2,10 +2,10 @@ import axios from 'axios';
 import { useState } from 'react';
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, registerCallableModule, ScrollView, Alert } from 'react-native';
 
-export const UpdateClient=({route})=>{
-  const { datosUsuario } = route.params;
+export const UpdateClient=({route})=>{//Usualemente en estos parentesis no hay nada, pero esta vez tienen {route} por que de ahi agarra los dstos
+  const { datosUsuario } = route.params; // guardamos los datos que nos mandaron, de una forma en la que los podamos manipular
 
-    const [DATA, setDATA] = useState({
+    const [DATA, setDATA] = useState({// useState en el que rcogemos la data. No me acuerdo por que le deje eso de rol, pero asi dejalo por favor
       rol:"cliente"
     });
   
@@ -16,10 +16,13 @@ export const UpdateClient=({route})=>{
       setDATA(newData)
     }
 
-      const updateClient= async()=>{
+      const updateClient= async()=>{//la funcion de update
     try {
     
-      console.log("Mandare", DATA)
+      console.log("Mandare", DATA)//Console..log para verificar
+
+      //Aqui bien curioso, por que para poder hacer la peticion necesitamos mandar el data y el ID. El id (que como recordaras lo recibimos de la otra pagina)
+      //lo enviamos contexto dinamico, y el data pues asi, normal XD
       const updated= await axios.put(`https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/update/${datosUsuario.id}`, DATA)
       console.log("Se supone ya hice la peticion")
       Alert.alert("Actualizado", `El usuario ${DATA.name} se ha actualizado correctamente`)
@@ -39,22 +42,22 @@ export const UpdateClient=({route})=>{
 
             <Text style={styles.label}>Nombre completo:</Text>
             <TextInput style={styles.input} 
-            onChangeText={(text)=>onChange("name",text)}
+            onChangeText={(text)=>onChange("name",text)/* Como has de recordar, son para que se registre lo que escribimos */}
             placeholder={datosUsuario.name}></TextInput>
 
             <Text style={styles.label}>Número telefónico:</Text>
             <TextInput style={styles.input} 
-            onChangeText={(text)=>onChange("phone_number",text)}
+            onChangeText={(text)=>onChange("phone_number",text)/* Como has de recordar, son para que se registre lo que escribimos */}
             placeholder={datosUsuario.phone_number}></TextInput>
         
             <Text style={styles.label}>Domicilio completo:</Text>
             <TextInput style={styles.input} 
-            onChangeText={(text)=>onChange("address",text)}
+            onChangeText={(text)=>onChange("address",text)/* Como has de recordar, son para que se registre lo que escribimos */}
             placeholder={datosUsuario.address}
             multiline={true}
             numberOfLines={4}></TextInput>
 
-            <Pressable style={styles.boton} onPress={()=>updateClient()}>
+            <Pressable style={styles.boton} onPress={()=>updateClient()/* mandamos a llamar a la funcion al ya tener todo */}>
             <Text style={styles.boton.label}>Actualizar datos</Text>
             </Pressable>
             
