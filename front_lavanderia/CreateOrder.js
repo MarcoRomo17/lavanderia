@@ -6,40 +6,7 @@ import { Picker } from "@react-native-picker/picker";
 
 
 export const CreateOrder =({navigation})=>{ 
-/*     {
-    "client_id": 1,
-    "user_id": 1,
-    "state": "recibido",
-    "total": 14212,
-    "estimated_delivery_date": "2025-07-09",
-    "pagado": false,
-    "garments": [
-        {
-            "type": "Falda",
-            "description": "Descripcion de ejemplo 1",
-            "observations": "Observacion de ejemplo",
-            "services": [
-                {
-                    "name": "Lavado",
-                    "quantity": 323,
-                    "unitPrice": 22
-                }
-            ]
-        },
-        {
-            "type": "Traje",
-            "description": "lele pancha a pinchecho",
-            "observations": "knflkwenflkewf",
-            "services": [
-                {
-                    "name": "Lavado",
-                    "quantity": 323,
-                    "unitPrice": 2 2
-                }
-            ]
-        }
-    ]
-} */
+
      const services= [ //Es en lo que usamos la base de dtos
         {
             name: "Lavado",

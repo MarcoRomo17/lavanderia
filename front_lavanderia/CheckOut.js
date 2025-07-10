@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, Alert, ScrollView } from 'react-native';
 import axios from "axios";
@@ -11,6 +11,85 @@ export const CheckOut =({route})=>{
     const {OrdenCompleta}= route.params;
     console.log("Hola soy garments recibidos",OrdenCompleta.garments)
     console.log("Hola soy el primer garments", OrdenCompleta.garments[0])
+    const [Total, setTotal] = useState(0);
+
+    useEffect(() => {
+      calculateTotal()
+    }, []);
+
+     //Funcion para calcular el total
+        const calculateTotal = () => {
+        let subTotal = 0;
+        
+        const data = OrdenCompleta;
+        console.log("Hola, soy dataaaaaa", data)
+        if (data.garments) {
+            for (const garment of data.garments) {
+                console.log(garment)
+                for (const service of garment.services) {
+                    console.log(service)
+                    subTotal += service.quantity * service.unitPrice
+                }
+            }
+        }
+        setTotal(subTotal)
+    }
+
+    const registerOrder = async()=>{
+        try {
+          const dataAMandar=OrdenCompleta
+          dataAMandar.total=Total
+          dataAMandar.client_id=1 //datos hardcodeados para que no haya pedos
+          dataAMandar.user_id=1 //datos hardcodeados para que no haya pedos
+
+          const today = new Date();
+        const fechaActual = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+
+        console.log(fechaActual); // Ejemplo: "2025-7-10"
+          dataAMandar.estimated_delivery_date=fechaActual//si, ya se que captura lo de hoy
+          console.log("Mandare a la BD ====================",dataAMandar)
+
+          await axios.post("https://dh8j0891-5000.usw3.devtunnels.ms/orders/create",dataAMandar)
+          Alert.alert("Orden registrada", "Ves burro, si se pudo XD")
+        } catch (error) {
+          console.log("Valio monjas",error)
+          Alert.alert("Sucedio un error", `Valio madres: ${error}`)
+        }
+    }
+    /*     {
+    "client_id": 1,
+    "user_id": 1,
+    "state": "recibido",
+    "total": 14212,
+    "estimated_delivery_date": "2025-07-09",
+    "pagado": false,
+    "garments": [
+        {
+            "type": "Falda",
+            "description": "Descripcion de ejemplo 1",
+            "observations": "Observacion de ejemplo",
+            "services": [
+                {
+                    "name": "Lavado",
+                    "quantity": 323,
+                    "unitPrice": 22
+                }
+            ]
+        },
+        {
+            "type": "Traje",
+            "description": "lele pancha a pinchecho",
+            "observations": "knflkwenflkewf",
+            "services": [
+                {
+                    "name": "Lavado",
+                    "quantity": 323,
+                    "unitPrice": 2 2
+                }
+            ]
+        }
+    ]
+} */
 
   
    const {navigate} = useNavigation();
@@ -28,21 +107,47 @@ export const CheckOut =({route})=>{
                     OrdenCompleta.garments.map((garment)=>(
                       <View style={styles.garment}>
 
-                        <Text style={styles.subTitle}>Prenda:</Text>
-                        <Text >{garment.type}</Text>
+                        <View style={styles.textoHorizontal}>
 
-                        <Text>Descripcion:</Text>
-                        <Text>{garment.description}</Text>
+                            <Text style={styles.subTitle}>Prenda:</Text>
+                            <Text style={styles.label} >{garment.type}</Text>
 
-                        <Text>Observaciones:</Text>
-                        <Text>{garment.observations}</Text>
-                        
+                        </View>
 
+                        <View style={styles.textoHorizontal}>
+
+                            <Text style={styles.subTitle}>Descripcion:</Text>
+                            <Text style={styles.label}>{garment.description}</Text>
+                        </View>
+
+                        <View style={styles.textoHorizontal}>
+                            <Text style={styles.subTitle}>Observaciones:</Text>
+                            <Text style={styles.label}>{garment.observations}</Text>
+
+                        </View>
                         {
                           garment.services.map((servis)=>(
                             <View style={styles.serviceWithinGarment}>
-                              <Text>{servis.name}</Text>
 
+                              <View style={styles.textoHorizontal}>
+                                    <Text style={styles.serviceWithinGarment.subTitle}>Servicio:</Text>
+                                    <Text>{servis.name}</Text>
+                              </View>
+
+                               <View style={styles.textoHorizontal}>
+                                    <Text style={styles.serviceWithinGarment.subTitle}>Cantidad:</Text>
+                                    <Text>{String(servis.quantity)}</Text>
+                              </View>
+
+                              <View style={styles.textoHorizontal}>
+                                    <Text style={styles.serviceWithinGarment.subTitle}>Precio por unidad:</Text>
+                                    <Text>{String(servis.unitPrice)}</Text>
+                              </View>
+
+                              <View style={styles.textoHorizontal}>
+                                    <Text style={styles.serviceWithinGarment.subTitle}>Subtotal de la prenda:</Text>
+                                    <Text>{String(servis.unitPrice*servis.quantity)}</Text>
+                              </View>
                             </View>
                           ))
                         }
@@ -53,6 +158,15 @@ export const CheckOut =({route})=>{
               </ScrollView>
 
             </View>
+              <View style={styles.totalContainer}>
+                    <View style={styles.textoHorizontal}>
+                      <Text style={styles.subTitle}>El total de su pedido es:</Text>
+                      <Text style={styles.label}>{Total}</Text>
+                    </View>
+                    <Pressable style={styles.totalContainer.boton} onPress={()=>registerOrder()}>
+                        <Text style={styles.totalContainer.boton.label} >Realizar pedido</Text>
+                    </Pressable>
+              </View>
               
 
        
@@ -80,7 +194,7 @@ const styles = StyleSheet.create({
   
   },
   subTitle:{
-    fontSize:20,
+    fontSize:18,
     fontWeight:"bold",
     marginHorizontal:15,
     
@@ -100,47 +214,16 @@ const styles = StyleSheet.create({
     padding:10,
     width:"100%",
     height:"100%",
-    backgroundColor:"red",
+  
     marginTop:10
+  },
 
-   
-  },
-  input:{
-    borderRadius:10,
-    borderWidth:2,
-    borderColor:"black",
-    marginHorizontal:"auto",
-    fontSize:15,
-    width:"90%",
-    fontSize:15,
-    backgroundColor:"white"
-  },
   label:{
-    fontWeight:"bold",
-    marginBottom:"1%",
-    marginTop:"2%"
+   fontSize:18,
+    marginVertical:"auto"
+
   },
 
-  boton:{
-    backgroundColor:"#70f788",
-    width:"50%",
-    height:"5%",
-    marginHorizontal:"auto",
-    marginTop:10,
-    alignContent:"center",
-    borderRadius:15,
-    justifyContent: 'center', // Centra verticalmente el contenido del botón
-    alignItems: 'center', 
-    borderColor:"black",
-    borderWidth:1,
-    label:{
-        color:"white",
-        fontWeight:"Bold",
-        fontSize:15,
-    textShadowColor: 'black',
-    textShadowRadius: 2,
-    }
-  },
   garment:{
     width:"100%",
     height:"auto",
@@ -159,7 +242,43 @@ const styles = StyleSheet.create({
     borderColor:"black",
     borderWidth:3,
     marginHorizontal:"auto",
-    marginVertical:10
+    marginVertical:10,
+      subTitle:{
+    fontSize:15,
+    fontWeight:"bold",
+    marginHorizontal:15,
+    
+  },
+  },
+  textoHorizontal:{
+    flexDirection:"row",
+    padding:5,
+    marginVertical:"5"
+  },
+  totalContainer:{
+    width:"100%",
+    height:"20%",
+        boton:{
+    backgroundColor:"#70f788",
+    width:"50%",
+    height:"30%",
+    marginHorizontal:"auto",
+    marginTop:10,
+    alignContent:"center",
+    borderRadius:15,
+    justifyContent: 'center', // Centra verticalmente el contenido del botón
+    alignItems: 'center', 
+    borderColor:"black",
+    borderWidth:1,
+    label:{
+        color:"white",
+        fontWeight:"Bold",
+        fontSize:15,
+    textShadowColor: 'black',
+    textShadowRadius: 2,
+    }
+  },
+    
   }
 
 });
