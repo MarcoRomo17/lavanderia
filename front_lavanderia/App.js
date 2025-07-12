@@ -11,11 +11,15 @@ import { ejemploTablas } from './ejemploTablas';
 import { AuxView } from './AuxView';
 import { CreateOrder } from './CreateOrder';
 import { CheckOut } from './CheckOut';
+import { CreateGarment } from './CreateGarment';
+import { AdminGarment } from './AdminGarment';
+import { UpdateGarment } from './UpdateGarment';
+//import { CreateService } from './CreateService';
 
 const Stack = createNativeStackNavigator();
 function RootStack() {
   return (
-    <Stack.Navigator initialRouteName="CreateOrder" screenOptions={{headerShown:false}}>
+    <Stack.Navigator initialRouteName="AuxView" screenOptions={{headerShown:false}}>
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="CreateUser" component={CreateUser} />
       <Stack.Screen name="CreateClient" component={CreateClient} />
@@ -25,6 +29,11 @@ function RootStack() {
       <Stack.Screen name="AuxView" component={AuxView} />
       <Stack.Screen name="CreateOrder" component={CreateOrder} />
       <Stack.Screen name="CheckOut" component={CheckOut} />
+      <Stack.Screen name="CreateGarment" component={CreateGarment} />
+      <Stack.Screen name="AdminGarment" component={AdminGarment} />
+      <Stack.Screen name="UpdateGarment" component={UpdateGarment} />
+      {/* <Stack.Screen name="CreateService" component={CreateService} /> */}
+
 
     </Stack.Navigator>
   );

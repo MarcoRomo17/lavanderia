@@ -2,46 +2,84 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, Alert } from 'react-native';
-import lavadora from "./IMG/lav.png"
+import agregarIMG from "./IMG/Agregar.png"
 import axios from "axios";
 
 
+export const CreateGarment =()=>{ 
+    const [DATA, setDATA] = useState({
+    
+    });
+  
+    const onChange=(target, value)=>{
+      const newData=DATA;//objeto en el que guardamos la info que ya tenemos
+      console.log(target, value)
+      newData[target]= value;//agregamos al objeto una propiedas y un valor
+      setDATA(newData)
+    }
 
-export const AuxView =()=>{ 
+/*       const registerUser= async()=>{
+    try {
+      
+      console.log("Mandare", DATA)
+      const registered= await axios.post("https://4f9dxrb9-5000.usw3.devtunnels.ms/users/register", DATA)
+      console.log("Ya se hizo la peticion")
+      Alert.alert("Registrado", `El usuario ${DATA.name} se ha registrado correctamente`)
+      
+
+    } catch (error) {
+      Alert.alert("No se registró", error)
+    }
+  } */
 
   
-   const {navigate} = useNavigation();
-  return (
+    const {navigate}= useNavigation()
+    return (
         <>
             <View style={styles.container}>
             <View style={styles.nav}>
-              <Text style={styles.title} >Lavanderias</Text>
+              <Text style={styles.title} >Registra tu servcio</Text>
 
             </View>
-                
+
             <View style={styles.imgContainer}>{/* img-container */}
-
-              <Image style={styles.imgContainer.img} source={lavadora}></Image>
+              <Image style={styles.imgContainer.img} source={agregarIMG}></Image>
             </View>
+
+              <Text style={styles.subTitle} >Rellena los siguientes campos por favor</Text>
+
             
             <View style={styles.mainContent}>
 
+              <Text style={styles.label}>Tipo</Text>
+              <TextInput style={styles.input}
+              onChangeText={(text)=>onChange("type",text)}
+              ></TextInput>
 
-              <Pressable style={styles.boton} onPress={()=>navigate("AdminClient")}>
-                <Text style={styles.boton.label}>Administrar clientes</Text>
+              <Text style={styles.label}>Descripcion</Text>
+              <TextInput style={styles.input}
+              onChangeText={(text)=>onChange("description",text)}
+              ></TextInput>
+
+              <Text style={styles.label}>Observaciones</Text>
+              <TextInput style={styles.input}
+              onChangeText={(text)=>onChange("observations",text)}
+              ></TextInput>
+
+
+            
+
+
+
+
+              <Pressable style={styles.boton} onPress={()=>registerUser()}>
+                <Text style={styles.boton.label}>Registrar</Text>
               </Pressable>
 
-              <Pressable style={styles.boton} onPress={()=>navigate("CreateClient")}>
-                <Text style={styles.label} >Crea a un cliente</Text>
+                <Pressable style={styles.boton} onPress={()=>navigate("AdminGarment")}>
+                <Text style={styles.boton.label}>Ver prendas </Text>
               </Pressable>
 
-              <Pressable style={styles.boton} onPress={()=>navigate("CreateGarment")}>
-                <Text style={styles.boton.label}>Registrar prenda</Text>
-              </Pressable>
-
-              <Pressable style={styles.boton} onPress={()=>navigate("CreateService")}>
-                <Text style={styles.label} >Registrar servicio</Text>
-              </Pressable>
             </View>
               
 
@@ -71,8 +109,9 @@ const styles = StyleSheet.create({
   subTitle:{
     fontSize:20,
     fontWeight:"bold",
-    margin:10,
-    marginHorizontal:"auto"
+    marginHorizontal:15,
+
+    marginVertical:10,
   },
   nav:{
     flexDirection: 'row',

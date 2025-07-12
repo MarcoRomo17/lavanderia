@@ -6,7 +6,7 @@ import { Picker } from "@react-native-picker/picker";
 
 
 export const CreateOrder =({navigation})=>{ 
-
+ 
      const services= [ //Es en lo que usamos la base de dtos
         {
             name: "Lavado",
