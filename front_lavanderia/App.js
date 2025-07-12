@@ -14,7 +14,9 @@ import { CheckOut } from './CheckOut';
 import { CreateGarment } from './CreateGarment';
 import { AdminGarment } from './AdminGarment';
 import { UpdateGarment } from './UpdateGarment';
-//import { CreateService } from './CreateService';
+import { CreateService } from './CreateService';
+import { AdminService } from './AdminService';
+import { UpdateService } from './UpdateService';
 
 const Stack = createNativeStackNavigator();
 function RootStack() {
@@ -32,7 +34,9 @@ function RootStack() {
       <Stack.Screen name="CreateGarment" component={CreateGarment} />
       <Stack.Screen name="AdminGarment" component={AdminGarment} />
       <Stack.Screen name="UpdateGarment" component={UpdateGarment} />
-      {/* <Stack.Screen name="CreateService" component={CreateService} /> */}
+      <Stack.Screen name="CreateService" component={CreateService} /> 
+      <Stack.Screen name="AdminService" component={AdminService} /> 
+      <Stack.Screen name="UpdateService" component={UpdateService} /> 
 
 
     </Stack.Navigator>
