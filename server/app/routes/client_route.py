@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-from app.controllers.client_controller import create_client, search_client_by_name, search_client_by_phone, update_client, delete_client
+from app.controllers.client_controller import create_client, search_client_by_name, search_client_by_phone, update_client, delete_client, search_clients
 
 client_bp= Blueprint("client_bp", __name__, url_prefix="/clientes")
 
@@ -29,7 +29,7 @@ def search_by_name():
     #Fea pero entencible
     #data=[]
     #for client in clients:
-     #   data.append(client.to_dict())
+    #data.append(client.to_dict())
         
     data=[client.to_dict() for client in clients]# dentro del arreglohacemos el ciclo. Es un ciclo generativo
     #es la manera fancy de hacerla. COmo tal es lo que se hace en el ciclo y ya pues despues el ciclo
@@ -44,6 +44,26 @@ def search_by_phone():
         return jsonify({"error":"Cliente no encontrado pipi"}), 400
     
     return jsonify(client.to_dict()),200
+
+
+@client_bp.route("/search", methods=["GET"])
+def search():
+    parameter = request.args.get("parameter")
+    filter = request.args.get("filter")
+    clients=[]
+    if filter and parameter:
+        if filter=="name":
+            clients = search_client_by_name(parameter)
+        elif filter =="phone":
+            clients = search_client_by_name(parameter)
+        else:
+            return jsonify({"msg":"Filtro desconocido"}), 400
+    else:
+        clients= search_clients()
+    return [client.to_dict() for client in clients]
+
+
+
 
 @client_bp.route("/update/<int:client_id>", methods=['PUT'])
 def update(client_id):

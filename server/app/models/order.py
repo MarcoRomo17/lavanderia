@@ -14,9 +14,6 @@ class Order(db.Model):
     total= db.Column(db.Integer, nullable=False)
     pagado= db.Column(db.Boolean, default=False)
     #Relaciones inversas pendientes
-
-    garments = db.relationship("Garment", backref="order", lazy =True)# va relaionado a la clase y a donde se lo trae, por asi decirlo
-
     #Relacion de pago
 
     def to_dict(self, garments:bool=False):#ponemos que ea opcional el order

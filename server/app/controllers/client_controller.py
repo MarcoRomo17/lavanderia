@@ -11,7 +11,7 @@ def search_client_by_name(name):
     return Client.query.filter(Client.name.ilike(f"%{name}%")).all()#Es para usar un select con like. Regresamos el LIKE
 
 def search_client_by_phone(phone):
-    return Client.query.filter_by(phone_number= phone).first()
+    return Client.query.filter(Client.phone_number.ilike(f"%{phone}%")).all()
 
 def update_client(client_id, update_data):
     client = Client.query.get(client_id)#por default siempre busca el id. IS quieres filtrar ppr algo mas, es filter by
@@ -34,3 +34,6 @@ def delete_client(client_id):
     db.session.delete(client)
     db.session.commit()
     return client
+
+def search_clients():
+    return Client.query.filter().all()

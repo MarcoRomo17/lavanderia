@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 from app.models.user import User
 from app.database.db import db
-from app.controllers.user_controller import login_user, logout_user, update_user, toggle_user_status, get_user_logs
+from app.controllers.user_controller import login_user, logout_user, update_user, toggle_user_status, get_user_logs, get_users, delete_user
 
 user_bp = Blueprint("users", __name__, url_prefix="/users")
 
@@ -76,3 +76,12 @@ def get_logs(user_id):
         "msg":"Logs obtenidos con exito",
         "logs":data
     }),200
+
+@user_bp.route("/get-all", methods=["GET"])
+def get_all():
+    users= get_users()
+    return [user.to_dict() for user in users]
+
+@user_bp.route("/delete/<int:user_id>", methods=["DELETE"])
+def delete(user_id):
+    return delete_user(user_id)

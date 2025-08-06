@@ -25,12 +25,16 @@ def create_app():
     migrate.init_app(app, db)
 
     #RUTAS
-    from.routes.user_route import user_bp
+    from .routes.user_route import user_bp
     from .routes.client_route import client_bp
     from .routes.order_route import order_bp
+    from .routes.garment_route import garment_bp
+    from .routes.service_route import service_bp
     app.register_blueprint(user_bp)
     app.register_blueprint(client_bp)
     app.register_blueprint(order_bp)
+    app.register_blueprint(garment_bp)
+    app.register_blueprint(service_bp)
 
     CORS(app)
     return app
