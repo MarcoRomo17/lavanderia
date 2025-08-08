@@ -20,7 +20,7 @@ def create():
                 }),200
 
 
-@client_bp.route("/search/name", methods=['GET'])
+#@client_bp.route("/search/name", methods=['GET'])
 def search_by_name():
     name= request.args.get("name")#para acceder a los argumentos de las peticiones. a los querys
     clients = search_client_by_name(name)
@@ -33,9 +33,9 @@ def search_by_name():
         
     data=[client.to_dict() for client in clients]# dentro del arreglohacemos el ciclo. Es un ciclo generativo
     #es la manera fancy de hacerla. COmo tal es lo que se hace en el ciclo y ya pues despues el ciclo
-    return jsonify(data),200
+    return data
 
-@client_bp.route("/search/phone", methods=['GET'])
+#@client_bp.route("/search/phone", methods=['GET'])
 def search_by_phone():
     phone = request.args.get("phone")
     client = search_client_by_phone(phone)
@@ -43,7 +43,7 @@ def search_by_phone():
     if not client:
         return jsonify({"error":"Cliente no encontrado pipi"}), 400
     
-    return jsonify(client.to_dict()),200
+    return client
 
 
 @client_bp.route("/search", methods=["GET"])

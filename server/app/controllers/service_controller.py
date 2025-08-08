@@ -25,15 +25,10 @@ def delete_service(service_id):
     db.session.commit()
     return service
 
-
 def get_services():
-    services=Service.query.get(Service).all() 
+    services = Service.query.filter().all()
+
     if not services:
         return None
-    return [service.to_dict() for service in services]
-
-def get_services():
-    services = Service.query.filter(Service).all()
-    if not services:
-        return None
-    return services
+    data= [service.to_dict() for service in services]
+    return data

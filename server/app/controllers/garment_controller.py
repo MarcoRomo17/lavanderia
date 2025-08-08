@@ -30,7 +30,7 @@ def update_garment(garment_id, updated_data):
     return garment
 
 def delete_garment(garment_id):
-    garment = garment.query.get(garment_id)
+    garment = Garment.query.get(garment_id)
     if not garment:
         return None
     db.session.delete(garment)

@@ -22,8 +22,9 @@ export const CreateClient =()=>{
     try {
     
       console.log("Mandare", DATA)
-      const registered= await axios.post("https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/create", DATA)
+      const registered= await axios.post("https://dh8j0891-5000.usw3.devtunnels.ms/clientes/create", DATA)
       Alert.alert("Registrado", `El usuario ${DATA.name} se ha registrado correctamente`)
+      navigate("AdminClient")
     } catch (error) {
       Alert.alert("No se registró", error)
     }

@@ -13,7 +13,9 @@ def create():
 @service_bp.route("/get-all", methods=['GET'])
 def get_all():
     service= get_services()
-    return jsonify({"msg":"Se encontro algo", "Lo encontrado":service}), 200
+    if not service:
+        return jsonify({"msg":"parece ser que no hay nada", })
+    return jsonify({"msg":"Se encontro algo", "found":service}), 200
 
 @service_bp.route("/update/<int:service_id>", methods=['PUT'])
 def update(service_id):

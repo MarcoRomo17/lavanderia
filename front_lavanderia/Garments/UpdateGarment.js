@@ -1,13 +1,13 @@
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { useState } from 'react';
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, registerCallableModule, ScrollView, Alert } from 'react-native';
 
-export const UpdateClient=({route})=>{//Usualemente en estos parentesis no hay nada, pero esta vez tienen {route} por que de ahi agarra los dstos
-  const { datosUsuario } = route.params; // guardamos los datos que nos mandaron, de una forma en la que los podamos manipular
+export const UpdateGarment=({route})=>{
+  const { datosGarment } = route.params; 
+  const {navigate} = useNavigation();
 
-    const [DATA, setDATA] = useState({// useState en el que rcogemos la data. No me acuerdo por que le deje eso de rol, pero asi dejalo por favor
-      rol:"cliente"
-    });
+    const [DATA, setDATA] = useState({});
   
     const onChange=(target, value)=>{
       const newData=DATA;//objeto en el que guardamos la info que ya tenemos
@@ -16,16 +16,16 @@ export const UpdateClient=({route})=>{//Usualemente en estos parentesis no hay n
       setDATA(newData)
     }
 
-      const updateClient= async()=>{//la funcion de update
+      const updateClient= async()=>{
     try {
     
-      console.log("Mandare", DATA)//Console..log para verificar
+      console.log("Mandare", DATA)
 
-      //Aqui bien curioso, por que para poder hacer la peticion necesitamos mandar el data y el ID. El id (que como recordaras lo recibimos de la otra pagina)
-      //lo enviamos contexto dinamico, y el data pues asi, normal XD
-      const updated= await axios.put(`https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/update/${datosUsuario.id}`, DATA)
+
+      const updated= await axios.put(`https://dh8j0891-5000.usw3.devtunnels.ms/garment/update/${datosGarment.id}`, DATA)
       console.log("Se supone ya hice la peticion")
-      Alert.alert("Actualizado", `El usuario ${DATA.name} se ha actualizado correctamente`)
+      Alert.alert("Actualizado", `La prenda se ha actualizado correctamente`)
+      navigate("AdminGarment")
     } catch (error) {
       Alert.alert("No se registró", error)
     }
@@ -39,23 +39,22 @@ export const UpdateClient=({route})=>{//Usualemente en estos parentesis no hay n
             </View>
 
             <View style={styles.mainContent}>
+                             <Text style={styles.label}>Tipo</Text>
+                              <TextInput style={styles.input} placeholder={datosGarment.type}
+                              onChangeText={(text)=>onChange("type",text)}
+                              ></TextInput>
+                
+                              <Text style={styles.label}>Descripcion</Text>
+                              <TextInput style={styles.input} placeholder={datosGarment.description}
+                              onChangeText={(text)=>onChange("description",text)}
+                              ></TextInput>
+                
+                              <Text style={styles.label}>Observaciones</Text>
+                              <TextInput style={styles.input} placeholder={datosGarment.observations}
+                              onChangeText={(text)=>onChange("observations",text)}
+                              ></TextInput>
 
-            <Text style={styles.label}>Nombre completo:</Text>
-            <TextInput style={styles.input} 
-            onChangeText={(text)=>onChange("name",text)/* Como has de recordar, son para que se registre lo que escribimos */}
-            placeholder={datosUsuario.name}></TextInput>
 
-            <Text style={styles.label}>Número telefónico:</Text>
-            <TextInput style={styles.input} 
-            onChangeText={(text)=>onChange("phone_number",text)/* Como has de recordar, son para que se registre lo que escribimos */}
-            placeholder={datosUsuario.phone_number}></TextInput>
-        
-            <Text style={styles.label}>Domicilio completo:</Text>
-            <TextInput style={styles.input} 
-            onChangeText={(text)=>onChange("address",text)/* Como has de recordar, son para que se registre lo que escribimos */}
-            placeholder={datosUsuario.address}
-            multiline={true}
-            numberOfLines={4}></TextInput>
 
             <Pressable style={styles.boton} onPress={()=>updateClient()/* mandamos a llamar a la funcion al ya tener todo */}>
             <Text style={styles.boton.label}>Actualizar datos</Text>

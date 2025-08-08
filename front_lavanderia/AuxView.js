@@ -42,6 +42,9 @@ export const AuxView =()=>{
               <Pressable style={styles.boton} onPress={()=>navigate("CreateService")}>
                 <Text style={styles.label} >Registrar servicio</Text>
               </Pressable>
+              <Pressable style={styles.boton} onPress={()=>navigate("Tabbs")}>
+                <Text style={styles.label} >Tbs servicio</Text>
+              </Pressable>
             </View>
               
 

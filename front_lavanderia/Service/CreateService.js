@@ -2,11 +2,11 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, Alert } from 'react-native';
-import agregarIMG from "./IMG/Agregar.png"
+import agregarIMG from "../IMG/Agregar.png"
 import axios from "axios";
 
 
-export const CreateGarment =()=>{ 
+export const CreateService =()=>{ 
     const [DATA, setDATA] = useState({
     
     });
@@ -18,19 +18,20 @@ export const CreateGarment =()=>{
       setDATA(newData)
     }
 
-/*       const registerUser= async()=>{
+      const registerService = async()=>{
     try {
       
       console.log("Mandare", DATA)
-      const registered= await axios.post("https://4f9dxrb9-5000.usw3.devtunnels.ms/users/register", DATA)
+      const registered= await axios.post("https://dh8j0891-5000.usw3.devtunnels.ms/services/create", DATA)
       console.log("Ya se hizo la peticion")
-      Alert.alert("Registrado", `El usuario ${DATA.name} se ha registrado correctamente`)
+      Alert.alert("Registrado", `El servicio ${DATA.name} se ha registrado correctamente`)
+      navigate("AdminService")
       
 
     } catch (error) {
       Alert.alert("No se registró", error)
     }
-  } */
+  }
 
   
     const {navigate}= useNavigation()
@@ -51,9 +52,9 @@ export const CreateGarment =()=>{
             
             <View style={styles.mainContent}>
 
-              <Text style={styles.label}>Tipo</Text>
+              <Text style={styles.label}>Nombre</Text>
               <TextInput style={styles.input}
-              onChangeText={(text)=>onChange("type",text)}
+              onChangeText={(text)=>onChange("name",text)}
               ></TextInput>
 
               <Text style={styles.label}>Descripcion</Text>
@@ -61,24 +62,19 @@ export const CreateGarment =()=>{
               onChangeText={(text)=>onChange("description",text)}
               ></TextInput>
 
-              <Text style={styles.label}>Observaciones</Text>
+              <Text style={styles.label}>Ingresa su precio</Text>
               <TextInput style={styles.input}
-              onChangeText={(text)=>onChange("observations",text)}
-              ></TextInput>
+              onChangeText={(text)=>onChange("price",text)}
+              ></TextInput>       
 
-
-            
-
-
-
-
-              <Pressable style={styles.boton} onPress={()=>registerUser()}>
+              <Pressable style={styles.boton} onPress={()=>registerService()} >
                 <Text style={styles.boton.label}>Registrar</Text>
               </Pressable>
 
-                <Pressable style={styles.boton} onPress={()=>navigate("AdminGarment")}>
-                <Text style={styles.boton.label}>Ver prendas </Text>
-              </Pressable>
+              
+                  <Pressable style={styles.boton} onPress={()=>navigate("AdminService")}>
+                  <Text style={styles.boton.label}>Ver servicios </Text>
+                </Pressable>
 
             </View>
               

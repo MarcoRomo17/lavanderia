@@ -1,74 +1,43 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image,  ScrollView, Alert } from 'react-native';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import axios from "axios";
 
 
 
-export const AdminService =({navigation})=>{ 
-
-      const [datosTabla, setdatosTabla] = useState( [
-  {
-    name: "Lavado de ropa",
-    description: "Servicio de lavado y secado de ropa por kilogramo.",
-    price: 60.00 // pesos mexicanos
-  },
-  {
-    name: "Planchado",
-    description: "Planchado de prendas individuales con entrega en el mismo día.",
-    price: 15.00
-  },
-  {
-    name: "Tintorería",
-    description: "Limpieza en seco de ropa delicada o de materiales especiales.",
-    price: 120.00
-  },
-  {
-    name: "Arreglo de cierres",
-    description: "Reparación o reemplazo de cierres dañados en prendas.",
-    price: 40.00
-  },
-  {
-    name: "Costura básica",
-    description: "Servicio de costura para ajustes sencillos como bastillas y botones.",
-    price: 30.00
-  }
-]);//Aqui se iran cambiando los datos de la tabla. Es en donde se guarda lo que nos devuelve la BD
-
+export const AdminClient =({navigation})=>{ 
+      const [dataABuscar, setdataABuscar] = useState(); //Cacha los datos que buscara en toda la bola de usuarios
+      const [datosTabla, setdatosTabla] = useState([]);//Aqui se iran cambiando los datos de la tabla. Es en donde se guarda lo que nos devuelve la BD
       
-
-
-    /*   const buscarEnLaBD=async()=>{
+      const onChange=(value)=>{//cacha y setea lo de la busqueda de usuario
+        setdataABuscar(value)
+        console.log(value)
+      }
+      
+      const searchBD= async(parametro, filtro)=>{
         try {
-          console.log("El medio es: ", phoneOrName.medio, " y lo que buscare es: ", dataABuscar)//Pongo este console.log para saber que info tengo antes de mandarla 
-              var usuariosdeRespuesta=[] // esta es una variable provisional, en la cual se guardara lo que traiga la bd. Es provisional por que solo se puede utilizar en esta funcion
-          //para buscar por telefono
-          if(phoneOrName.medio=="phone"){//si el medio que escoogio es telefono, se ejecuta este endpoint:
-              usuariosdeRespuesta= await axios.get(`https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/search/phone?phone=${dataABuscar}`)
-              const vAux=[usuariosdeRespuesta.data]
-              setdatosTabla(vAux)
+          if (!parametro || !filtro){
+            const datosTraidos= await  axios.get("https://dh8j0891-5000.usw3.devtunnels.ms/clientes/search")
+            setdatosTabla(datosTraidos.data)
           }
-          
-          //para buscar por nombre
-          if(phoneOrName.medio=="name"){//si el medio que escoogio es nombre, se ejecuta este endpoint:
-             usuariosdeRespuesta= await axios.get(`https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/search/name?name=${dataABuscar}`)
-             console.log("la peticion ya se hizo")
-             console.log("me traje: ", usuariosdeRespuesta.data)
-             setdatosTabla(usuariosdeRespuesta.data) //ahora si, cambiamos el valor del useState que habiamos dicho a lo que nos trajo la BD
-          }
+            const datosTraidos= await  axios.get(`https://dh8j0891-5000.usw3.devtunnels.ms/clientes/search?filter=${filtro}&parameter=${parametro}`)
+            setdatosTabla(datosTraidos.data)
 
-          
-        } catch (error) {// por si pasa un error
-          Alert.alert("Error al buscar", `Lo que pasa es que: ${error}`)
+        } catch (error) {
+          Alert.alert("Hubo un error", "",error)
         }
+      }
 
-      } */
+      useEffect(() => {
+        searchBD()
+      }, []);
 
-/*       const eliminarCliente= async(ID)=>{// Esta es la funcion para eliminar. Recibe de parametro el id del cliente que vamos a eliminar. Es llamada desde los botones de la tabla
+
+      const eliminarCliente= async(ID)=>{// Esta es la funcion para eliminar. Recibe de parametro el id del cliente que vamos a eliminar. Es llamada desde los botones de la tabla
           console.log("Hola, eliminare el id ", ID)//Para saber que me trae
           try {//el trycatch
-           await axios.delete(`https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/delete/${ID}`)//como puedes ver, por la naturaleza del endpoint de como mandarle el id, el texto de la URL debe ser dinamico
+           await axios.delete(`https://dh8j0891-5000.usw3.devtunnels.ms/clientes/delete/${ID}`)//como puedes ver, por la naturaleza del endpoint de como mandarle el id, el texto de la URL debe ser dinamico
             console.log("Ya hice la peticion")
             Alert.alert("Usuario elimiando con exito")
           } catch (error) {//el error
@@ -76,7 +45,7 @@ export const AdminService =({navigation})=>{
 
           }
       }
- */
+
 
 
     const {navigate}= useNavigation()// esta madrecita es la que nos permitira navegar entre paginas
@@ -85,16 +54,23 @@ export const AdminService =({navigation})=>{
     const mapiado= datosTabla.map((Registro)=>( //en la variable "mapiado" es donde vamos a guardar el arreglo modificado por .map() de lo que nos trajo la BD. Aqui se usa ese useState que dije
       //A continacion, le decimos que por cada elemento del arreglo original (recuerda que cada elemento es un objeto) haga un arreglo dividiendolo en partes
       //Por lo que ese arreglo tendra el nombre, el telefono, el domicilio, y luego los botones (que si, se ven bieeen raros. De hecho le atine a que asi fuera laforma de poner botones XD)
-    [Registro.name,Registro.description,String(Registro.price),
-      (<>
-      <Pressable onPress={()=>eliminarCliente(Registro.id)/* este es el boton de borrar, que como puedes ver, manda a llamar a la funcion eliminar, y le pasa el id del que se va a eliminar */}>
-        <Text>Borrar</Text>
-      </Pressable>
-      <Pressable onPress={() => navigation.navigate('UpdateService', { datosService: Registro })/* Aqui esta el de actualizar. Este te redirecciona a tu pantalla de update, y te manda la info se paso con el  { datosUsuario: Registro }
+    [Registro.name,Registro.phone_number,Registro.address,
+      (<><View style={styles.head}>
+        <View>
+          <Pressable onPress={()=>eliminarCliente(Registro.id)/* este es el boton de borrar, que como puedes ver, manda a llamar a la funcion eliminar, y le pasa el id del que se va a eliminar */}>
+            <Text>🗑️</Text>
+          </Pressable>
+        </View>
+
+        <View>
+
+      <Pressable onPress={() => navigation.navigate('UpdateClient', { datosUsuario: Registro })/* Aqui esta el de actualizar. Este te redirecciona a tu pantalla de update, y te manda la info se paso con el  { datosUsuario: Registro }
       IMPORTANTEISMO !!! ATENCION!!! cambia el nombre de UpdateClient a como tu lo tengas nombrado porf
       */}>
-        <Text>Update</Text>
+        <Text>✏️</Text>
       </Pressable>
+        </View>
+      </View>
       </>)]
       
     ))
@@ -107,18 +83,36 @@ export const AdminService =({navigation})=>{
             <View style={styles.nav}>
               <Text style={styles.title} >Bienvenido administrador</Text>
             </View>
-            <Pressable style={styles.boton} onPress={()=>navigate("AuxView")}>
-                <Text style={styles.boton.label}>Ir al inicio</Text>
+
+            <View style={styles.buscador}>
+              <TextInput
+              placeholder={"Buscar..."}
+              style={styles.buscador.input}
+              onChangeText={(text)=>onChange(text)}></TextInput>
+
+              <Pressable style={styles.buscador.boton} onPress={()=>searchBD()}><Text>🔄</Text></Pressable>
+              <Pressable style={styles.buscador.boton} onPress={()=>searchBD(dataABuscar, "phone")}><Text>📱</Text></Pressable>
+
+              <Pressable style={styles.buscador.boton} onPress={()=>searchBD(dataABuscar, "name")}><Text>👤</Text></Pressable>
+              {/* OJO a la hira de calarlo. Debes de seleccionar si buscar por telefono o por nombre antes de buscar, si no te saldra error */}
+            </View>
+            <Pressable style={styles.boton} onPress={()=>navigate("Dashboard")}>
+                <Text>Ir al inicio</Text>
               </Pressable>
+
+            <Pressable style={styles.boton} onPress={()=>navigate("CreateClient")}>
+              <Text>Registrar cliente</Text>
+            </Pressable>
+              <Text style={styles.subTitle} >Rellena los siguientes campos por favor</Text>
+
             
             <ScrollView style={styles.containerTable}>
               <Table borderStyle={{borderWidth: 2, borderColor: 'black', width:"auto"}}> 
-                <Row data={[ 'Nombre', 'Descipcion', 'Precio', "Acciones"]} style={styles.head}textStyle={styles.text}/>
+                <Row data={[ 'Nombre', 'Telefono', 'Domicilio', "Acciones"]} style={styles.head} textStyle={styles.text}/>
                 <Rows data={mapiado} textStyle={styles.text}/>
               </Table>
 
             </ScrollView>
-
               
     </View>
         </>
@@ -172,9 +166,8 @@ const styles = StyleSheet.create({
   boton:{
     backgroundColor:"#70f788",
     width:"50%",
-    height:"400px",
+    height:"15%",
     marginHorizontal:"auto",
-    marginVertical:5,
     marginTop:10,
     alignContent:"center",
     borderRadius:15,
@@ -230,8 +223,29 @@ const styles = StyleSheet.create({
     backgroundColor:"white"
   }
   },
-    head: { height: 40, backgroundColor: '#5e8effff' },
+  boton:{
+    backgroundColor:"#70f788",
+    width:"90%",
+    height:"100px",
+    marginHorizontal:"auto",
+    marginTop:10,
+    alignContent:"center",
+    borderRadius:15,
+    justifyContent: 'center', // Centra verticalmente el contenido del botón
+    alignItems: 'center', 
+    borderColor:"black",
+    borderWidth:1,
+    label:{
+        color:"white",
+        fontWeight:"Bold",
+        fontSize:15,
+    textShadowColor: 'black',
+    textShadowRadius: 2,
+    }
+  },
+      head: { height: 40, backgroundColor: '#5e8effff' },
   text: { margin: 6 },
    containerTable: { flex: 1, padding: 6, paddingTop: 10  },
+
 
 });

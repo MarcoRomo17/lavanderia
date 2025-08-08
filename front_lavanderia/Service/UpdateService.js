@@ -1,10 +1,11 @@
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { useState } from 'react';
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, registerCallableModule, ScrollView, Alert } from 'react-native';
 
-export const UpdateGarment=({route})=>{//Usualemente en estos parentesis no hay nada, pero esta vez tienen {route} por que de ahi agarra los dstos
-  const { datosGarment } = route.params; // guardamos los datos que nos mandaron, de una forma en la que los podamos manipular
-
+export const UpdateService=({route})=>{//Usualemente en estos parentesis no hay nada, pero esta vez tienen {route} por que de ahi agarra los dstos
+  const { datosService } = route.params; // guardamos los datos que nos mandaron, de una forma en la que los podamos manipular
+  const {navigate} = useNavigation();
     const [DATA, setDATA] = useState({});
   
     const onChange=(target, value)=>{
@@ -14,20 +15,19 @@ export const UpdateGarment=({route})=>{//Usualemente en estos parentesis no hay 
       setDATA(newData)
     }
 
-     /*  const updateClient= async()=>{//la funcion de update
+      const updateClient= async()=>{
     try {
     
-      console.log("Mandare", DATA)//Console..log para verificar
-
-      //Aqui bien curioso, por que para poder hacer la peticion necesitamos mandar el data y el ID. El id (que como recordaras lo recibimos de la otra pagina)
-      //lo enviamos contexto dinamico, y el data pues asi, normal XD
-      const updated= await axios.put(`https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/update/${datosGarment.id}`, DATA)
+      console.log("Mandare", DATA)
+      const updated= await axios.put(`https://dh8j0891-5000.usw3.devtunnels.ms/services/update/${datosService.id}`, DATA)
       console.log("Se supone ya hice la peticion")
-      Alert.alert("Actualizado", `El usuario ${DATA.name} se ha actualizado correctamente`)
+      Alert.alert("Actualizado", `El servicio se ha actualizado correctamente`)
+      navigate("AdminService")
+      
     } catch (error) {
       Alert.alert("No se registró", error)
     }
-  } */
+  }
 
     return(
         <>
@@ -38,18 +38,18 @@ export const UpdateGarment=({route})=>{//Usualemente en estos parentesis no hay 
 
             <View style={styles.mainContent}>
                              <Text style={styles.label}>Tipo</Text>
-                              <TextInput style={styles.input}
-                              onChangeText={(text)=>onChange("type",text)}
+                              <TextInput style={styles.input} placeholder={datosService.name}
+                              onChangeText={(text)=>onChange("name",text)}
                               ></TextInput>
                 
                               <Text style={styles.label}>Descripcion</Text>
-                              <TextInput style={styles.input}
+                              <TextInput style={styles.input} placeholder={datosService.description}
                               onChangeText={(text)=>onChange("description",text)}
                               ></TextInput>
                 
-                              <Text style={styles.label}>Observaciones</Text>
-                              <TextInput style={styles.input}
-                              onChangeText={(text)=>onChange("observations",text)}
+                              <Text style={styles.label}>Precio</Text>
+                              <TextInput style={styles.input} placeholder={String(datosService.price)} keyboardType='numeric'
+                              onChangeText={(text)=>onChange("price",text)}
                               ></TextInput>
 
 

@@ -2,13 +2,13 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, Alert } from 'react-native';
-import agregarIMG from "./IMG/Agregar.png"
+import agregarIMG from "../IMG/Agregar.png"
 import axios from "axios";
 
 
-export const CreateUser =()=>{ 
+export const CreateGarment =()=>{ 
     const [DATA, setDATA] = useState({
-      rol:"cliente"
+    
     });
   
     const onChange=(target, value)=>{
@@ -18,13 +18,13 @@ export const CreateUser =()=>{
       setDATA(newData)
     }
 
-      const registerUser= async()=>{
+      const registerGarment= async()=>{
     try {
       
       console.log("Mandare", DATA)
-      const registered= await axios.post("https://4f9dxrb9-5000.usw3.devtunnels.ms/users/register", DATA)
+      const registered= await axios.post("https://dh8j0891-5000.usw3.devtunnels.ms/garment/create", DATA)
       console.log("Ya se hizo la peticion")
-      Alert.alert("Registrado", `El usuario ${DATA.name} se ha registrado correctamente`)
+      Alert.alert("Registrado", `La prenda ${DATA.type} se ha registrado correctamente`)
       
 
     } catch (error) {
@@ -38,7 +38,7 @@ export const CreateUser =()=>{
         <>
             <View style={styles.container}>
             <View style={styles.nav}>
-              <Text style={styles.title} >¡Regístrate ahora!</Text>
+              <Text style={styles.title} >Registra tu servcio</Text>
 
             </View>
 
@@ -51,19 +51,19 @@ export const CreateUser =()=>{
             
             <View style={styles.mainContent}>
 
-              <Text style={styles.label}>Nombre completo:</Text>
+              <Text style={styles.label}>Tipo</Text>
               <TextInput style={styles.input}
-              onChangeText={(text)=>onChange("name",text)}
+              onChangeText={(text)=>onChange("type",text)}
               ></TextInput>
 
-              <Text style={styles.label}>Correo electrónico:</Text>
+              <Text style={styles.label}>Descripcion</Text>
               <TextInput style={styles.input}
-              onChangeText={(text)=>onChange("email",text)}
+              onChangeText={(text)=>onChange("description",text)}
               ></TextInput>
 
-              <Text style={styles.label}>Ingresa una contraseña:</Text>
-              <TextInput style={styles.input}
-              onChangeText={(text)=>onChange("password",text)}
+              <Text style={styles.label}>Observaciones</Text>
+              <TextInput style={styles.input} placeholder="Este campo es opcional"
+              onChangeText={(text)=>onChange("observations",text)}
               ></TextInput>
 
 
@@ -72,13 +72,14 @@ export const CreateUser =()=>{
 
 
 
-              <Pressable style={styles.boton} onPress={()=>registerUser()}>
-                <Text style={styles.boton.label}>Registrarse</Text>
+              <Pressable style={styles.boton} onPress={()=>registerGarment()}>
+                <Text style={styles.boton.label}>Registrar</Text>
               </Pressable>
 
-              <Pressable onPress={()=>navigate("Login")}>
-                <Text style={styles.label}>¡Ya tengo cuenta!</Text>
+                <Pressable style={styles.boton} onPress={()=>navigate("AdminGarment")}>
+                <Text style={styles.boton.label}>Ver prendas </Text>
               </Pressable>
+
             </View>
               
 

@@ -6,14 +6,14 @@ garment_bp= Blueprint("garment_bp", __name__, url_prefix="/garment")
 @garment_bp.route("/create", methods=['POST'])
 def create():
     data = request.json
-    garment= create_garment(data["name"], data["description"])
+    garment= create_garment(data["type"], data["description"], data["observations"])
     return jsonify({"msg":"Prenda registrada"}), 200
     
   
 @garment_bp.route("/get-all", methods=['GET'])
 def get_all():
     garment= get_garments()
-    return jsonify({"msg":"Se encontro algo", "Lo encontrado":garment}), 200
+    return jsonify({"msg":"Se encontro algo", "garments":garment}), 200
 
 @garment_bp.route("/update/<int:garment_id>", methods=['PUT'])
 def update(garment_id):

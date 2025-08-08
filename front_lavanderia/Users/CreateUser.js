@@ -2,13 +2,13 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, Alert } from 'react-native';
-import agregarIMG from "./IMG/Agregar.png"
+import agregarIMG from "../IMG/Agregar.png"
 import axios from "axios";
 
 
-export const CreateService =()=>{ 
+export const CreateUser =()=>{ 
     const [DATA, setDATA] = useState({
-    
+      rol:"empleado"
     });
   
     const onChange=(target, value)=>{
@@ -18,11 +18,11 @@ export const CreateService =()=>{
       setDATA(newData)
     }
 
-/*       const registerUser= async()=>{
+      const registerUser= async()=>{
     try {
       
       console.log("Mandare", DATA)
-      const registered= await axios.post("https://4f9dxrb9-5000.usw3.devtunnels.ms/users/register", DATA)
+      const registered= await axios.post("https://dh8j0891-5000.usw3.devtunnels.ms/users/register", DATA)
       console.log("Ya se hizo la peticion")
       Alert.alert("Registrado", `El usuario ${DATA.name} se ha registrado correctamente`)
       
@@ -30,7 +30,7 @@ export const CreateService =()=>{
     } catch (error) {
       Alert.alert("No se registró", error)
     }
-  } */
+  }
 
   
     const {navigate}= useNavigation()
@@ -38,7 +38,7 @@ export const CreateService =()=>{
         <>
             <View style={styles.container}>
             <View style={styles.nav}>
-              <Text style={styles.title} >Registra tu servcio</Text>
+              <Text style={styles.title} >¡Regístrate ahora!</Text>
 
             </View>
 
@@ -51,30 +51,34 @@ export const CreateService =()=>{
             
             <View style={styles.mainContent}>
 
-              <Text style={styles.label}>Nombre</Text>
+              <Text style={styles.label}>Nombre completo:</Text>
               <TextInput style={styles.input}
               onChangeText={(text)=>onChange("name",text)}
               ></TextInput>
 
-              <Text style={styles.label}>Descripcion</Text>
+              <Text style={styles.label}>Correo electrónico:</Text>
               <TextInput style={styles.input}
-              onChangeText={(text)=>onChange("description",text)}
+              onChangeText={(text)=>onChange("email",text)}
               ></TextInput>
 
-              <Text style={styles.label}>Ingresa su precio</Text>
+              <Text style={styles.label}>Ingresa una contraseña:</Text>
               <TextInput style={styles.input}
-              onChangeText={(text)=>onChange("price",text)}
-              ></TextInput>       
+              onChangeText={(text)=>onChange("password",text)}
+              ></TextInput>
 
-              <Pressable style={styles.boton} >
-                <Text style={styles.boton.label}>Registrar</Text>
+
+            
+
+
+
+
+              <Pressable style={styles.boton} onPress={()=>registerUser()}>
+                <Text style={styles.boton.label}>Registrarse</Text>
               </Pressable>
 
-              
-                  <Pressable style={styles.boton} onPress={()=>navigate("AdminService")}>
-                  <Text style={styles.boton.label}>Ver servicios </Text>
-                </Pressable>
-
+              <Pressable onPress={()=>navigate("Login")}>
+                <Text style={styles.label}>¡Ya tengo cuenta!</Text>
+              </Pressable>
             </View>
               
 

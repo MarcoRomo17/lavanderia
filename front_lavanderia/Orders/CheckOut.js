@@ -28,7 +28,7 @@ export const CheckOut =({route})=>{
                 console.log(garment)
                 for (const service of garment.services) {
                     console.log(service)
-                    subTotal += service.quantity * service.unitPrice
+                    subTotal += service.quantity * service.price
                 }
             }
         }
@@ -51,6 +51,7 @@ export const CheckOut =({route})=>{
 
           await axios.post("https://dh8j0891-5000.usw3.devtunnels.ms/orders/create",dataAMandar)
           Alert.alert("Orden registrada", "Ves burro, si se pudo XD")
+          navigate("Dashboard")
         } catch (error) {
           console.log("Valio monjas",error)
           Alert.alert("Sucedio un error", `Valio madres: ${error}`)
@@ -72,7 +73,7 @@ export const CheckOut =({route})=>{
                 {
                     "name": "Lavado",
                     "quantity": 323,
-                    "unitPrice": 22
+                    "price": 22
                 }
             ]
         },
@@ -84,7 +85,7 @@ export const CheckOut =({route})=>{
                 {
                     "name": "Lavado",
                     "quantity": 323,
-                    "unitPrice": 2 2
+                    "price": 2 2
                 }
             ]
         }
@@ -141,12 +142,12 @@ export const CheckOut =({route})=>{
 
                               <View style={styles.textoHorizontal}>
                                     <Text style={styles.serviceWithinGarment.subTitle}>Precio por unidad:</Text>
-                                    <Text>{String(servis.unitPrice)}</Text>
+                                    <Text>{String(servis.price)}</Text>
                               </View>
 
                               <View style={styles.textoHorizontal}>
                                     <Text style={styles.serviceWithinGarment.subTitle}>Subtotal de la prenda:</Text>
-                                    <Text>{String(servis.unitPrice*servis.quantity)}</Text>
+                                    <Text>{String(servis.price*servis.quantity)}</Text>
                               </View>
                             </View>
                           ))
@@ -278,7 +279,5 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
     }
   },
-    
   }
-
 });

@@ -26,8 +26,8 @@ def create():
             notes=garment["observations"]
         )
         for service in garment["services"]:
-            new_service= add_service(name=service["name"], description="description momentanea", price=service["unitPrice"])
-            subtotal = service["unitPrice"] * service ["quantity"]
+            new_service= add_service(name=service["name"], description="description momentanea", price=service["price"])
+            subtotal = service["price"] * service ["quantity"]
             create_order_detail(order_id=order.id,garment_id=new_garment.id, service_id=new_service.id, quantity=service["quantity"])
 
     return jsonify({"msg":"Orden creada con exito", "order_id":order.id}),200

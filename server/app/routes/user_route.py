@@ -45,8 +45,9 @@ def logout(user_id):
     logout_user(user_id)
     return jsonify({"msg":"logout exitoso"})
 
-@user_bp.route("/update/<int:user_id> ", methods=["PUT"])
+@user_bp.route("/update/<int:user_id>", methods=["PUT"])
 def update(user_id):
+    print(user_id)
     data = request.json
     user = update_user(user_id, data)
     if user:

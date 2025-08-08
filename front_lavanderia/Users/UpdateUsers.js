@@ -1,12 +1,13 @@
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { useState } from 'react';
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, registerCallableModule, ScrollView, Alert } from 'react-native';
 
-export const UpdateService=({route})=>{//Usualemente en estos parentesis no hay nada, pero esta vez tienen {route} por que de ahi agarra los dstos
-  const { datosService
- } = route.params; // guardamos los datos que nos mandaron, de una forma en la que los podamos manipular
+export const UpdateUsers=({route})=>{
+  const { datosUser } = route.params; 
+  const {navigate} = useNavigation();
 
-    const [DATA, setDATA] = useState({});
+    const [DATA, setDATA] = useState({state:datosUser.state});
   
     const onChange=(target, value)=>{
       const newData=DATA;//objeto en el que guardamos la info que ya tenemos
@@ -15,20 +16,27 @@ export const UpdateService=({route})=>{//Usualemente en estos parentesis no hay 
       setDATA(newData)
     }
 
-     /*  const updateClient= async()=>{//la funcion de update
+      const updateUser= async()=>{
     try {
     
-      console.log("Mandare", DATA)//Console..log para verificar
+      console.log("Mandare", DATA)
 
-      //Aqui bien curioso, por que para poder hacer la peticion necesitamos mandar el data y el ID. El id (que como recordaras lo recibimos de la otra pagina)
-      //lo enviamos contexto dinamico, y el data pues asi, normal XD
-      const updated= await axios.put(`https://4f9dxrb9-5000.usw3.devtunnels.ms/clientes/update/${datosGarment.id}`, DATA)
+
+      const updated= await axios.put(`https://dh8j0891-5000.usw3.devtunnels.ms/users/update/${datosUser.id}`, DATA)
       console.log("Se supone ya hice la peticion")
-      Alert.alert("Actualizado", `El usuario ${DATA.name} se ha actualizado correctamente`)
+      Alert.alert("Actualizado", `Elusuario se ha actualizado correctamente`)
+      navigate("AdminUsers")
     } catch (error) {
+      console.log("No se actualizo:", error)
       Alert.alert("No se registró", error)
     }
-  } */
+  }
+
+  /* 
+name
+email
+rol
+state */
 
     return(
         <>
@@ -38,24 +46,32 @@ export const UpdateService=({route})=>{//Usualemente en estos parentesis no hay 
             </View>
 
             <View style={styles.mainContent}>
-                             <Text style={styles.label}>Tipo</Text>
-                              <TextInput style={styles.input}
+                             <Text style={styles.label}>Nombre</Text>
+                              <TextInput style={styles.input} placeholder={datosUser.name}
                               onChangeText={(text)=>onChange("name",text)}
                               ></TextInput>
                 
-                              <Text style={styles.label}>Descripcion</Text>
-                              <TextInput style={styles.input}
-                              onChangeText={(text)=>onChange("description",text)}
+                              <Text style={styles.label}>Email</Text>
+                              <TextInput style={styles.input} placeholder={datosUser.email}
+                              onChangeText={(text)=>onChange("email",text)}
                               ></TextInput>
                 
-                              <Text style={styles.label}>Precio</Text>
-                              <TextInput style={styles.input} keyboardType='numeric'
-                              onChangeText={(text)=>onChange("price",text)}
+                              <Text style={styles.label}>Rol que desempeña</Text>
+                              <TextInput style={styles.input} placeholder={datosUser.rol}
+                              onChangeText={(text)=>onChange("rol",text)}
                               ></TextInput>
 
+                              <Text style={styles.label}>Estado</Text>
+                              <Text>{DATA.state}</Text>
 
+                                          <Pressable style={styles.boton} onPress={()=>onChange('state', "activo")/* mandamos a llamar a la funcion al ya tener todo */}>
+            <Text style={styles.boton.label}>Activo</Text>
+            </Pressable>
+                        <Pressable style={styles.boton} onPress={()=>onChange('state', "inactivo")/* mandamos a llamar a la funcion al ya tener todo */}>
+            <Text style={styles.boton.label}>inactivo</Text>
+            </Pressable>
 
-            <Pressable style={styles.boton} onPress={()=>updateClient()/* mandamos a llamar a la funcion al ya tener todo */}>
+            <Pressable style={styles.boton} onPress={()=>updateUser()/* mandamos a llamar a la funcion al ya tener todo */}>
             <Text style={styles.boton.label}>Actualizar datos</Text>
             </Pressable>
             

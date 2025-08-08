@@ -1,36 +1,21 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, Alert, ScrollView } from 'react-native';
 import { Picker } from "@react-native-picker/picker";
+import axios from "axios";
 
 
 export const CreateOrder =({navigation})=>{ 
  
-     const services= [ //Es en lo que usamos la base de dtos
-        {
-            name: "Lavado",
-            quantity: 0,
-            unitPrice:22
-        },
-        {
-            name: "Plachado",
-            quantity: 0,
-            unitPrice:60
-        },
-        {
-            name: "Tintoreria",
-            quantity: 0,
-            unitPrice:0
-        },
-        {
-            name: "Especial",
-            quantity: 0,
-            unitPrice:0
-        },
-    ]
+    
+    const [services, setservices] = useState([{
+        
+        name:"",
+    price:0}]);
+    const [garmentsList, setgarmentsList] = useState([]);
 
-    const garmentsList = ["Camisa", "Falda", "Traje", "Pantalón"];
+    //const garmentsList = ["Camisa", "Falda", "Traje", "Pantalón"];
    
     const defaultGarment = { //El garment por default. Este igual nos sirve al momento de agregar mas
         type: "Camisa",
@@ -135,7 +120,7 @@ const onChangeService = (selectedValue, ig, is) => {
                 console.log(garment)
                 for (const service of garment.services) {
                     console.log(service)
-                    subTotal += service.quantity * service.unitPrice
+                    subTotal += service.quantity * service.price
                 }
             }
         }
@@ -149,6 +134,42 @@ const onChangeService = (selectedValue, ig, is) => {
       setDATA(newData)
     }
 
+    //Funcion para traernos los servicios de la BD
+
+    const bringService =async()=>{
+        try {
+            const servicesBrought= await axios.get("https://dh8j0891-5000.usw3.devtunnels.ms/services/get-all")
+            console.log("Soy services========================================",servicesBrought.data.found)
+            setservices(servicesBrought.data.found)
+
+        } catch (error) {
+            
+        }
+    }
+
+    const bringGarments =async()=>{
+        try {
+           const garmentsBrought= await axios.get("https://dh8j0891-5000.usw3.devtunnels.ms/garment/get-all")
+            const garmentsArray= garmentsBrought.data.garments
+
+            const garmentsFiltered=[]
+            for(const element of garmentsArray){
+                garmentsFiltered.push(element.type)
+            }
+            
+
+            console.log("Soy garments lekdw;emd;lewmd filtered================================",garmentsFiltered)
+            
+            setgarmentsList(garmentsFiltered)
+
+        } catch (error) {
+            
+        }
+    }
+    useEffect(() => {
+        bringGarments()
+        bringService()
+    }, []);
     const {navigate}= useNavigation()
     return (
         <>
@@ -204,7 +225,7 @@ const onChangeService = (selectedValue, ig, is) => {
                         {
                             garment.services.map((service,is)=>(/* Igual, mapeo con su servicio iterado y su indice para reconocer cada uno */
                                <View style={styles.serviceWithinGarment}>
-                                <Text>Hola soy servicio</Text>
+                                
                                 {
                                         
                                          is > 0 && (                                            
@@ -232,9 +253,10 @@ const onChangeService = (selectedValue, ig, is) => {
                                         ></TextInput> 
 
                                     <Text style={styles.label}>Precio:</Text>
-                                        <TextInput style={styles.input} keyboardType="numeric"
-                                        onChangeText={(text) => onChangeServiceFields("unitPrice", text, i, is)}
-                                        ></TextInput> 
+                                        {/* <TextInput style={styles.input} keyboardType="numeric"
+                                        onChangeText={(text) => onChangeServiceFields("price", text, i, is)}
+                                        ></TextInput>  */}
+                                        <Text style={styles.label}>{service.price}</Text>
 
                                     <Pressable  onPress={() => addServiceToGarment(i)} >
                                         <Text style={styles.boton.label}>Agregar servicio</Text>
@@ -251,11 +273,7 @@ const onChangeService = (selectedValue, ig, is) => {
               }            
 
             </ScrollView>
-            <Text>{total}</Text>
 
-            <Pressable style={styles.boton} onPress={calculateTotal}>
-                <Text style={styles.boton.label}>Calcular</Text>
-            </Pressable>
 
             <Pressable style={styles.boton} onPress={() => navigation.navigate('CheckOut', { OrdenCompleta: order })}>
                 <Text style={styles.boton.label}>CheckOut</Text>
@@ -307,7 +325,6 @@ const styles = StyleSheet.create({
     padding:10,
     width:"100%",
     height:"100%",
-    backgroundColor:"red",
     marginTop:10
 
    

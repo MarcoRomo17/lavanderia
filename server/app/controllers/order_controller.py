@@ -110,21 +110,38 @@ def create_order_table(orders):
 
 
 def get_order_dashboard(pagination):
-    #Piden pagina 1
-    #Los que vamos a ignorar son 0
-    orders = Order.query.filter().order_by(Order.created_at.desc()).limit(10)
-    if pagination >1:
-        orders = orders.offset(pagination*10)
-    return create_order_table(orders.all())
+    page_size = 10
+    query = Order.query.order_by(Order.created_at.desc())
+    
+    # Calcula cuántos registros saltar
+    offset_value = (pagination - 1) * page_size
+    query = query.offset(offset_value).limit(page_size)
+    
+    return create_order_table(query.all())
+
 
 def get_pending_order_dashboard(pagination):
-    order_received = Order.query.filter_by(state="recibido").order_by(Order.created_at.desc()).limit(10)
-    order_process = Order.query.filter_by(state="en proceso").order_by(Order.created_at.desc()).limit(10)
-    if pagination >1:
-        order_received = order_received.offset(pagination*10)
-        order_process = order_process.offset(pagination*10)
-    orders = order_received.all()+ order_process.all()
+    offset_value = (pagination - 1) * 10
+
+    order_received = (
+        Order.query
+        .filter_by(state="recibido")
+        .order_by(Order.created_at.desc())
+        .offset(offset_value)
+        .limit(10)
+    )
+
+    order_process = (
+        Order.query
+        .filter_by(state="en proceso")
+        .order_by(Order.created_at.desc())
+        .offset(offset_value)
+        .limit(10)
+    )
+
+    orders = order_received.all() + order_process.all()
     return create_order_table(orders)
+
 
 def get_counting():
     num_garments = Garment.query.filter().count()
